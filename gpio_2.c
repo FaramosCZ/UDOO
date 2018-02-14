@@ -20,6 +20,14 @@
    gcc -std=c99 -Wall -Wextra -Werror -pedantic -o gpio gpio_2.c && ./gpio
 
  SAMPLE OUTPUT:
+   name: 			gpiochip0
+   label:			INT33FF:00
+   number of lines:		56
+
+   line offset:			55
+   flags:			7
+   name:
+   consumer:			gpioset
 
 --------------------------------------------------------------------------- */
 
