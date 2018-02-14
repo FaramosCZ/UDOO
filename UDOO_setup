@@ -1,0 +1,49 @@
+GET FEDORA INSTALLED
+    Go to getfedora.org
+    Prepare USB with netinstall server
+    In installation process, pick "minimal" setup.
+
+FIRST STEPS
+    1) BIOS boot order
+	Connect SSD drive and give it priority over eMMC storage.
+    1) update (shouldn't be needed after net install)
+        # dnf update
+    2) get basic software
+        # dnf install nano mc tree openssh wget bash-completion tar gcc gdb git
+    3) enable and start sshd (should be already enabled and running)
+        # systemctl status sshd
+        # systemctl enable sshd && systemctl start sshd
+    4) get IP address
+        # ip a
+	    -> enp2s0 -> inet
+    5) connect via ssh (trick to find the device connected to the same LAN)
+        for i in {1..255}; do ssh -o ConnectTimeout=2 root@192.168.0.$i; done
+    6) enable wi-fi
+        # dnf install NetworkManager-wifi
+        # systemctl restart NetworkManager
+	It may be necessary to get the wifi driver
+        # dmesg | grep iwlwifi
+            iwlwifi 0000:03:00.0: Direct firmware load for iwlwifi-3168-23.ucode failed with error -2
+                https://www.intel.com/content/www/us/en/wireless-products/dual-band-wireless-ac-3168-brief.html
+                https://www.intel.com/content/www/us/en/support/articles/000005511/network-and-i-o/wireless-networking.html
+                https://wireless.wiki.kernel.org/_media/en/users/drivers/iwlwifi-3168-ucode-22.361476.0.tgz
+                    README, /lib/firmware
+                        reboot !
+        More about networking on https://fedoraproject.org/wiki/Networking/CLI
+    7) prepare hotspot - access to both Internet and the device     10.42.0.1
+        # journalctl -u NetworkManager.service
+        # dnf install dnsmasq
+
+        # nmcli con add type wifi ifname wlp3s0 con-name Hostspot autoconnect yes ssid Hostspot
+        # nmcli con modify Hostspot 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
+        # nmcli con modify Hostspot wifi-sec.key-mgmt wpa-psk
+        # nmcli con modify Hostspot wifi-sec.psk "password"
+        # nmcli connection modify Hostspot connection.autoconnect-priority 1
+
+        # nmcli con up Hostspot
+	Note: you may need to "nmcli con down <wifi>" connection before using wifi module as hotspot
+    8) prepare the gpio pins
+        # dnf install libgpiod libgpiod-devel libgpiod-utils
+            Use libgpioinfo, libgpioset, libgpioget to play with the pins. The value on pin will be reset once pin file descriptor released.
+                gpioset --mode=time -s 10 -l gpiochip0 55=0
+
