@@ -8,7 +8,7 @@
 
  DESCRIPTION:
    This piece of code tries to open GPIO device and read some infromation
-   about the GPIO chip.
+   about the GPIO line.
 
  INFO:
    This software only works with 'linux/gpio.h' and in the case, you can see
@@ -17,12 +17,9 @@
    /sys/class/gpio/...
 
  COMPILATION:
-   gcc -std=c99 -Wall -Wextra -Werror -pedantic -o gpio gpio_1.c && ./gpio
+   gcc -std=c99 -Wall -Wextra -Werror -pedantic -o gpio gpio_2.c && ./gpio
 
  SAMPLE OUTPUT:
-   name: 			gpiochip0
-   label:			INT33FF:00
-   number of lines:		56
 
 --------------------------------------------------------------------------- */
 
@@ -36,6 +33,8 @@
 #include <linux/gpio.h>
 
 #include <errno.h>         // errno
+
+#include <string.h>        // memset
 
 #define DEBUG 0
 
@@ -73,6 +72,41 @@ int main()
  printf("name: \t\t\t%s\n", chip_info.name);
  printf("label:\t\t\t%s\n", chip_info.label);
  printf("number of lines:\t%lu\n", (unsigned long) chip_info.lines);
+
+
+ // ---------------------------------------------------------------------------
+ printf("\n");
+
+
+ // prepare the data structure, defined in linux/gpio.h, in order to load data in it
+ struct gpioline_info line_info;
+
+
+ memset(&line_info, 0, sizeof(line_info));
+ line_info.line_offset = chip_info.lines - 1;
+
+
+ rv = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &line_info);
+ if(rv == -1)
+  {
+   // Save errno before any other call, that could set it differently
+   int errsv = errno;
+   printf("ioctl() failure: %d\n", rv);
+   if(errsv == EBADF) printf("EBADF\n");
+   if(errsv == EFAULT) printf("EFAULT\n");
+   if(errsv == EINVAL) printf("EINVAL\n");
+   if(errsv == ENOTTY) printf("ENOTTY\n");
+   return rv;
+  }
+ else{ if(DEBUG){printf("ioctl() success: %d\n", rv);}}
+
+
+ // Now, when we have the data, we can look at them
+ printf("line offset:\t\t%lu\n", (unsigned long) line_info.line_offset);
+ printf("flags:\t\t\t%lu\n", (unsigned long) line_info.flags);
+ printf("name:\t\t\t%s\n", line_info.name);
+ printf("consumer:\t\t%s\n", line_info.consumer);
+
 
  return 0;
 }
