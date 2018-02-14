@@ -1,3 +1,1 @@
-This repository contains every piece of code and information I needed in order to get my UDOO x86_64 board running flawlessly with Fedora 27.
-
-Each branch readme should decribe its specific content.
+C sample codes demonstrating basic work with GPIO pins
