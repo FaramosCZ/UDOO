@@ -46,4 +46,7 @@ FIRST STEPS
         # dnf install libgpiod libgpiod-devel libgpiod-utils
             Use libgpioinfo, libgpioset, libgpioget to play with the pins. The value on pin will be reset once pin file descriptor released.
                 gpioset --mode=time -s 10 -l gpiochip0 55=0
-
+    9) customize login screen message - show IP adresses
+	edit /etc/issue
+		IP LAN: \4{enp2s0}
+		IP WIFI: \4{wlp3s0}
