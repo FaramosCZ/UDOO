@@ -47,13 +47,13 @@ alias HELP='echo -e \
  /etc/profile.d/alias.sh
 
  # Allow user to install software
- echo \"<user> ALL= NOPASSWD: /usr/bin/dnf\" >> /etc/sudoers.d/<username>
+ $ echo \"<user> ALL= NOPASSWD: /usr/bin/dnf\" >> /etc/sudoers.d/<username>
 
  # Useful commands for login track
- aureport -au -i
- last
- lastb
- lastlog
+ $ aureport -au -i
+ $ last
+ $ lastb
+ $ lastlog
 
 
 "
