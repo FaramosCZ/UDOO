@@ -31,7 +31,7 @@ alias HELP='echo -e \
  $ ssh-copy-id <user>@<machine>
 
  # Wi-Fi
- # Default password: "password"
+ # Default password: \"password\"
  $ nmcli con modify UDOO-Hotspot wifi-sec.psk "password"
  $ nmcli con up UDOO-Hotspot
  $ nmcli con down UDOO-Hotspot
