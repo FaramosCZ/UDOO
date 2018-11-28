@@ -1,13 +1,13 @@
 # ---------------------------------------------------------
 # Prepare the system
-dnf update
-dnf --comment="Basic software" install \
+dnf update -y --nogpgcheck
+dnf --comment="Basic software" install  -y --nogpgcheck \
 nano mc tree openssh wget curl bash-completion tar gcc gdb git fedora-repos-rawhide policycoreutils-python-utils lynx psmisc
 
 
 # ---------------------------------------------------------
 # Enable SSHD
-systemctl status sshd
+systemctl status sshd --no-pager
 systemctl enable sshd && systemctl start sshd
 
 # Set ssh key authentification from guest to host
@@ -24,7 +24,7 @@ IP WIFI: \4{wlp3s0} (default wifi password: \"password\")
 
 # ---------------------------------------------------------
 # Wi-Fi
-dnf --comment="nmcli, wifi" install NetworkManager-wifi dnsmasq
+dnf --comment="nmcli, wifi" install -y --nogpgcheck NetworkManager-wifi dnsmasq
 
 #   # dmesg | grep iwlwifi -> iwlwifi 0000:03:00.0: Direct firmware load for iwlwifi-3168-23.ucode failed with error -2
 #   https://www.intel.com/content/www/us/en/wireless-products/dual-band-wireless-ac-3168-brief.html
@@ -37,7 +37,7 @@ cd /tmp && wget https://wireless.wiki.kernel.org/_media/en/users/drivers/iwlwifi
 reboot
 # !! REBOOT !!
 
-nmcli con add type wifi ifname wlp3s0 con-name UDOO-Hotspot autoconnect yes ssid UDOO-Hotspot
+nmcli con add type wifi ifname wlp3s0 con-name UDOO-Hotspot autoconnect no ssid UDOO-Hotspot
 nmcli con modify UDOO-Hotspot 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
 nmcli con modify UDOO-Hotspot wifi-sec.key-mgmt wpa-psk
 nmcli con modify UDOO-Hotspot wifi-sec.psk "password"
@@ -48,10 +48,8 @@ nmcli con down UDOO-Hotspot
 
 # ---------------------------------------------------------
 # Setup user accounts
-useradd -m faramos && passwd faramos
-useradd -m hemmond && passwd hemmond
-useradd -m hvezdna_lod && passwd hvezdna_lod
-
+for I in faramos hemmond hvezdna_lod
+do useradd -m $I && echo -e "$I\n$I" | passwd $I; done
 
 # ---------------------------------------------------------
 # IRC server
@@ -61,9 +59,10 @@ firewall-cmd --add-port=6667/tcp
 firewall-cmd --runtime-to-permanent
 
 # Prepare the IRC server
-dnf --comment="IRC server" install ngircd
+dnf --comment="IRC server" install -y --nogpgcheck ngircd
 
-# Configure the server in /etc/ngircd.conf; download the config file
+# Copy the config file to /etc/ngircd.conf
+mv -f ngircd.conf /etc/ngircd.conf
 # fix permissions and owner / group of the config file
 chmod a-rwx /etc/ngircd.conf
 chmod ug+rw /etc/ngircd.conf
@@ -75,7 +74,7 @@ systemctl enable ngircd && systemctl start ngircd
 
 # ---------------------------------------------------------
 # IRC client with a log bot
-dnf --comment="IRC client" install weechat screen tmux
+dnf --comment="IRC client" install -y --nogpgcheck weechat screen tmux
 
 # Tweak the ngircd user
 mkdir /home/ngircd && chown ngircd:ngircd /home/ngircd/
@@ -92,17 +91,18 @@ su -c "weechat" ngircd
 
 # Prepare custom systemd service, so the log bot will be started automaticaly after the IRC server
 # Edit "/usr/lib/systemd/system/ngircd.service", add:
-#	Wants=weechat_client.service
-#	Before=weechat_client.service
+#	  Wants=weechat_client.service
+#	  Before=weechat_client.service
 
 # Copy "weechat_client.service" to the "/usr/lib/systemd/system/"
+cp weechat_client.service /usr/lib/systemd/system/
 systemctl daemon-reload
 
 # Prepare and apply SELinux policy (prepared in POLICY); search for "/var/log/audit/audit.log"
 
 setenforce 0
 systemctl start weechat_client
-systemctl status weechat_client
+systemctl status weechat_client --no-pager
 systemctl stop weechat_client
 setenforce 1
 audit2allow -a
@@ -111,13 +111,13 @@ semodule -i weechat_client.pp
 
 # Test the service
 systemctl start weechat_client
-systemctl status weechat_client
+systemctl status weechat_client --no-pager
 
 
 # ---------------------------------------------------------
 # Install VLC
-dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-dnf install vlc
+dnf install -y --nogpgcheck https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+dnf install -y --nogpgcheck vlc
 
 # use in terminal with:
 # vlc -I ncurses
@@ -127,3 +127,8 @@ dnf install vlc
 # copy file to alias.sh  to  /etc/profile.d/alias.sh
 cp alias.sh /etc/profile.d/alias.sh
 
+# ---------------------------------------------------------
+# BTRFS
+# create snapshot
+mkdir /BTRFS
+btrfs subvolume snapshot / /BTRFS/fresh_setup
