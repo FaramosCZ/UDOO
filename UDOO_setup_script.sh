@@ -103,6 +103,7 @@ systemctl daemon-reload
 setenforce 0
 systemctl start weechat_client
 systemctl status weechat_client --no-pager
+sleep 1
 systemctl stop weechat_client
 setenforce 1
 audit2allow -a
@@ -115,6 +116,19 @@ systemctl status weechat_client --no-pager
 
 
 # ---------------------------------------------------------
+# Aliases
+# copy file to alias.sh  to  /etc/profile.d/alias.sh
+cp alias.sh /etc/profile.d/alias.sh
+
+
+# ---------------------------------------------------------
+# BTRFS
+# create snapshot
+mkdir /BTRFS
+btrfs subvolume snapshot / /BTRFS/fresh_setup
+
+
+# ---------------------------------------------------------
 # Install VLC
 dnf install -y --nogpgcheck https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 dnf install -y --nogpgcheck vlc
@@ -122,13 +136,4 @@ dnf install -y --nogpgcheck vlc
 # use in terminal with:
 # vlc -I ncurses
 
-# ---------------------------------------------------------
-# Aliases
-# copy file to alias.sh  to  /etc/profile.d/alias.sh
-cp alias.sh /etc/profile.d/alias.sh
 
-# ---------------------------------------------------------
-# BTRFS
-# create snapshot
-mkdir /BTRFS
-btrfs subvolume snapshot / /BTRFS/fresh_setup
