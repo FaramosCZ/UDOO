@@ -16,8 +16,10 @@ systemctl enable sshd && systemctl start sshd
 
 # ---------------------------------------------------------
 # Customize login screen message - show IP adresses
-echo '		IP LAN: \4{enp2s0}
-		IP WIFI: \4{wlp3s0}' > /etc/issue
+echo -e "\
+IP LAN: \4{enp2s0}
+IP WIFI: \4{wlp3s0} (default wifi password: \"password\")
+" > /etc/issue
 
 
 # ---------------------------------------------------------
