@@ -63,7 +63,11 @@ firewall-cmd --runtime-to-permanent
 # Prepare the IRC server
 dnf --comment="IRC server" install ngircd
 
-# Configure the server in /etc/ngircd.conf
+# Configure the server in /etc/ngircd.conf; download the config file
+# fix permissions and owner / group of the config file
+chmod a-rwx /etc/ngircd.conf
+chmod ug+rw /etc/ngircd.conf
+chown root:ngircd /etc/ngircd.conf
 
 # Start the server
 systemctl enable ngircd && systemctl start ngircd
