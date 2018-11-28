@@ -1,0 +1,7 @@
+[Service]
+User=ngircd
+Group=ngircd
+
+ExecStart=/usr/bin/screen -D -m /usr/bin/weechat
+
+Restart=on-failure
