@@ -1,0 +1,44 @@
+------------------------------------
+
+# TeamSpeak server:
+$ dnf install -y --nogpgcheck bzip2
+$ adduser -m teamspeak && echo -e "teamspeak\nteamspeak" | passwd teamspeak
+    
+$ wget http://dl.4players.de/ts/releases/3.5.0/teamspeak3-server_linux_amd64-3.5.0.tar.bz2
+
+$ firewall-cmd --add-port=9987/tcp
+$ firewall-cmd --add-port=9987/udp
+$ firewall-cmd --runtime-to-permanent
+
+# TeamSpeak client:
+$ dnf install -y --nogpgcheck nss zip unzip libXcursor xorg-x11-server-Xorg xorg-x11-xinit
+
+# ln /home/teamspeak/.ts3client --> config
+
+
+audio group ??
+pulse not starting automatically??
+pulse jack plugin ??
+    pulseaudio-module-jack
+    jack-audio-connection-kit-dbus
+    alsa-plugins-pulseaudio
+
+
+.... pohrabat se v nastavení nakonfigurovaného TS a VLC ??
+
+
+
+-------------------------
+
+dnf install --comment="Mumble server and client" -y --nogpgcheck murmur mumble
+systemctl start murmur
+firewall-cmd --add-port=64738/tcp
+firewall-cmd --runtime-to-permanent
+
+useradd -m mumble && echo -e "mumble\nmumble" | passwd mumble
+
+
+
+
+
+python virtual environment;
