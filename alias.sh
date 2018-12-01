@@ -50,6 +50,12 @@ alias HELP='echo -e \
  # Allow user to install software
  $ echo \"<user> ALL= NOPASSWD: /usr/bin/dnf\" >> /etc/sudoers.d/<username>
 
+ # SUDO configuration:
+ # All members of "UDOO_managers_accounts" can 'sudo' to anz of the memeber of "UDOO_managed_accounts"
+ #   Default password timeout is 1 hour
+ #   Default user to which 'sudo' logs is "hvezdna_lod"
+ #   Default behaviour is to run login shell, if no command specified
+
  # Useful commands for login track
  $ aureport -au -i
  $ last
