@@ -129,6 +129,28 @@ btrfs subvolume snapshot / /BTRFS/fresh_setup
 
 
 # ---------------------------------------------------------
+# Configure SUDO
+groupadd UDOO_managers_accounts
+groupadd UDOO_managed_accounts
+
+usermod -a -G UDOO_managers_accounts faramos
+usermod -a -G UDOO_managers_accounts hemmond
+
+usermod -a -G UDOO_managed_accounts hvezdna_lod
+#usermod -a -G UDOO_managed_accounts teamspeak
+#usermod -a -G UDOO_managed_accounts mumble
+
+echo -e \
+"# https://www.sudo.ws/man/1.8.15/sudoers.man.html
+Defaults:%UDOO_managers_accounts   timestamp_timeout=60, runas_default=hvezdna_lod, logfile=/var/log/sudolog_UDOO_managers_accounts
+Defaults   log_input, log_output
+Defaults   shell_noargs
+
+%UDOO_managers_accounts   ALL=(%UDOO_managed_accounts)   ALL" \
+> /etc/sudoers.d/UDOO
+
+
+# ---------------------------------------------------------
 # Install VLC
 dnf install -y --nogpgcheck https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 dnf install -y --nogpgcheck vlc
