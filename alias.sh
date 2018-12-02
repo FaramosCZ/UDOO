@@ -25,7 +25,7 @@ alias SSS='systemctl status '
 alias SST='systemctl start '
 alias SSP='systemctl stop '
 
-alias SUSPEND='systemctl suspend'
+alias SUSPEND='wall "Machine will be suspended in 10 seconds !" && sleep 10 && systemctl suspend &'
 
 alias HELP='echo -e \
 "
