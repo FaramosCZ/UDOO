@@ -2,7 +2,7 @@
 
 # TeamSpeak server:
 $ dnf install -y --nogpgcheck bzip2
-$ adduser -m teamspeak && echo -e "teamspeak\nteamspeak" | passwd teamspeak
+$ useradd -c "Account for running both TeamSpeak server and TeamSpeak client" -m teamspeak && echo -e "teamspeak\nteamspeak" | passwd teamspeak
     
 $ wget http://dl.4players.de/ts/releases/3.5.0/teamspeak3-server_linux_amd64-3.5.0.tar.bz2
 
@@ -35,7 +35,7 @@ systemctl start murmur
 firewall-cmd --add-port=64738/tcp
 firewall-cmd --runtime-to-permanent
 
-useradd -m mumble && echo -e "mumble\nmumble" | passwd mumble
+useradd -c "Account for running both Mumble server (murmur) and Mumble client" -m mumble && echo -e "mumble\nmumble" | passwd mumble
 
 
 
