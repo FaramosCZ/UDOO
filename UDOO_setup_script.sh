@@ -50,6 +50,7 @@ nmcli con down UDOO-Hotspot
 # Setup user accounts
 for I in faramos hemmond hvezdna_lod
 do useradd -m $I && echo -e "$I\n$I" | passwd $I; done
+usermod -c "Main account to run software for Hvězdná Loď events" hvezdna_lod
 
 # ---------------------------------------------------------
 # IRC server
@@ -79,6 +80,7 @@ dnf --comment="IRC client" install -y --nogpgcheck weechat screen tmux
 # Tweak the ngircd user
 mkdir /home/ngircd && chown ngircd:ngircd /home/ngircd/
 sed -i -E "s|^(ngircd:.*)/tmp/:/sbin/nologin|\1/home/ngircd:/bin/bash|" /etc/passwd
+usermod -c "Account for both IRC server and IRC client with log bots" ngircd
 
 # Configure the wechat client for ngircd user
 su -c "weechat" ngircd 
