@@ -51,7 +51,7 @@ alias HELP='echo -e \
  $ echo \"<user> ALL= NOPASSWD: /usr/bin/dnf\" >> /etc/sudoers.d/<username>
 
  # SUDO configuration:
- # All members of "UDOO_managers_accounts" can 'sudo' to anz of the memeber of "UDOO_managed_accounts"
+ # All members of "UDOO_managers_accounts" can 'sudo' to any memeber of the "UDOO_managed_accounts" group
  #   Default password timeout is 1 hour
  #   Default user to which 'sudo' logs is "hvezdna_lod"
  #   Default behaviour is to run login shell, if no command specified
