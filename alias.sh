@@ -25,6 +25,8 @@ alias SSS='systemctl status '
 alias SST='systemctl start '
 alias SSP='systemctl stop '
 
+alias SUSPEND='systemctl suspend'
+
 alias HELP='echo -e \
 "
  # Set ssh key authentification from guest to host
