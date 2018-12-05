@@ -126,7 +126,7 @@ cp alias.sh /etc/profile.d/alias.sh
 # ---------------------------------------------------------
 # BTRFS
 # create snapshot
-mkdir /BTRFS
+btrfs subvolume create /BTRFS
 btrfs subvolume snapshot / /BTRFS/fresh_setup
 
 
