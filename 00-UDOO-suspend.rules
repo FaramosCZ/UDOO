@@ -1,0 +1,47 @@
+// /etc/polkit-1/rules.d/00-UDOO-suspend.rules
+
+// TIP:
+//   search for specific actions with
+//   $ pkaction | grep "..."
+
+// allow all users to create inhibitor locks
+polkit.addRule(function(action, subject) {
+    if (
+        action.id == "org.freedesktop.login1.inhibit-block-idle" ||
+        action.id == "org.freedesktop.login1.inhibit-block-shutdown" ||
+        action.id == "org.freedesktop.login1.inhibit-block-sleep" ||
+        action.id == "org.freedesktop.login1.inhibit-delay-shutdown" ||
+        action.id == "org.freedesktop.login1.inhibit-delay-sleep" ||
+        action.id == "org.freedesktop.login1.inhibit-handle-hibernate-key" ||
+        action.id == "org.freedesktop.login1.inhibit-handle-lid-switch" ||
+        action.id == "org.freedesktop.login1.inhibit-handle-power-key" ||
+        action.id == "org.freedesktop.login1.inhibit-handle-suspend-key"
+       )
+    {
+     return polkit.Result.YES;
+    }
+});
+
+// allow all users in group to set wall messages (needed for suspend, reboot, poweroff, ...)
+polkit.addRule(function(action, subject) {
+    if (
+        action.id == "org.freedesktop.login1.set-wall-message"
+        && subject.isInGroup("UDOO_allow_suspend")
+       )
+    {
+     return polkit.Result.YES;
+    }
+});
+
+// allow all users in a group to suspend device, if no blocking inhibitor locks are taken and no other connections are opened
+polkit.addRule(function(action, subject) {
+    if (
+         (
+          action.id == "org.freedesktop.login1.suspend"
+         )
+         && subject.isInGroup("UDOO_allow_suspend")
+       )
+    {
+     return polkit.Result.YES;
+    }
+});
