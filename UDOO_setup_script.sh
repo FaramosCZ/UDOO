@@ -169,6 +169,7 @@ dnf --comment="POLKIT" install -y polkit
 # copy polkit configuration file "00-UDOO-suspend.rules" to "/etc/polkit-1/rules.d/"
 
 useradd -M -N -c "User dedicated only for automatic device suspension powered by CRON" -g UDOO_allow_suspend UDOO_suspend
+usermod -d /tmp -m UDOO_suspend
 echo -e "*/5 * * * * UDOO_suspend systemctl suspend" >> /etc/crontab
 
 
