@@ -125,9 +125,17 @@ cp alias.sh /etc/profile.d/alias.sh
 
 # ---------------------------------------------------------
 # BTRFS
+# First of all, prepare GRUB for rollbacks to snapshots
+grub2-switch-to-blscfg
 # create snapshot
 btrfs subvolume create /BTRFS
 btrfs subvolume snapshot / /BTRFS/fresh_setup
+
+# TODO:
+# for each snapshot we would eventually like to boot to, we need update /etc/fstab and change "subvol=root" to "subvol=root/BTRFS/<name_of_snapshot>"
+# for each snaphsot then we need to create new grub entry with suffix "rootflags=subvol=root/BTRFS/<name_of_snapshot>" to the "options" setting (right after the "$kernelopts")
+# Warning:
+# As the kernel may change to new version, the entry may not be bootable anymore, since the "linux" and "initrd" images may change its verion number
 
 
 # ---------------------------------------------------------
