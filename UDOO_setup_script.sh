@@ -161,6 +161,19 @@ Defaults   shell_noargs
 
 
 # ---------------------------------------------------------
+# Configure suspend of the device
+dnf --comment="CRON" install -y cronie
+systemctl enable crond && systemctl start crond
+
+dnf --comment="POLKIT" install -y polkit
+# copy polkit configuration file "00-UDOO-suspend.rules" to "/etc/polkit-1/rules.d/"
+
+useradd -M -N -c "User dedicated only for automatic device suspension powered by CRON" -g UDOO_allow_suspend UDOO_suspend
+echo -e "*/5 * * * * UDOO_suspend systemctl suspend" >> /etc/crontab
+
+
+
+# ---------------------------------------------------------
 # Install VLC
 dnf install -y --nogpgcheck https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 dnf install -y --nogpgcheck vlc
