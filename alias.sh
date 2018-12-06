@@ -26,6 +26,7 @@ alias SST='systemctl start '
 alias SSP='systemctl stop '
 
 alias SUSPEND='wall "Machine will be suspended in 10 seconds !" && sleep 10 && systemctl suspend &'
+alias BLOCK_SUSPEND='systemd-inhibit '
 
 alias HELP='echo -e \
 "
@@ -64,6 +65,7 @@ alias HELP='echo -e \
  $ lastb
  $ lastlog
 
+# Use BLOCK_SUSPEND to run commands which should block device suspension
 
 "
 '
